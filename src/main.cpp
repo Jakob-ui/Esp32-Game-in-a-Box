@@ -1,20 +1,25 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+static const int servoPin = 18;
 
-Servo Servomotor; 
+Servo servo1;
 
-void setup()
-{
-  Servomotor.attach(23);  
+void setup() {
+  Serial.begin(115200);
+  servo1.attach(servoPin);
 }
 
-void loop()
-{
-  delay(1000);
-  Servomotor.write(90);
-  delay(1000);
-  Servomotor.write(180);
-   delay(1000);
-  
+void loop() {
+  for(int posDegrees = 0; posDegrees <= 180; posDegrees++) {
+    servo1.write(posDegrees);
+    Serial.println(posDegrees);
+    delay(20);
+  }
+
+  for(int posDegrees = 180; posDegrees >= 0; posDegrees--) {
+    servo1.write(posDegrees);
+    Serial.println(posDegrees);
+    delay(20);
+  }
 }
