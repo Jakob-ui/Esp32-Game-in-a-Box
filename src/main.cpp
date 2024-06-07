@@ -1,6 +1,9 @@
 #include <Arduino.h>
-#include <SPI.h>
 #include <MFRC522.h>
+#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+#include <oled_Display.h>
 
 int calculateDutyCycle(int angle);
 void servoUp();
@@ -10,7 +13,7 @@ void servoDown();
 #define LED_True 15
 
 #define SS_PIN 21
-#define RST_PIN 22       
+#define RST_PIN 16       
 
 #define SERVO_PIN 4 
 #define LEDC_CHANNEL 0
@@ -40,13 +43,14 @@ void setup() {
   digitalWrite(LED_False, LOW);
   digitalWrite(LED_True, LOW);
   Serial.println("Tap an RFID/NFC tag on the RFID-RC522 reader");
+  oledSetup();
 }
 
 void loop() {
   digitalWrite(LED_False, LOW);
   digitalWrite(LED_True, LOW);
  if (rfid.PICC_IsNewCardPresent()) { // new tag is available
-    if (rfid.PICC_ReadCardSerial()) { // NUID has been read
+    if (rfid.PICC_ReadCardSerial()) {
       MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
       Serial.print("RFID/NFC Tag Type: ");
       Serial.println(rfid.PICC_GetTypeName(piccType));
@@ -76,8 +80,8 @@ void loop() {
         servoDown();
       }
 
-      rfid.PICC_HaltA(); // halt PICC
-      rfid.PCD_StopCrypto1(); // stop encryption on PCD
+      rfid.PICC_HaltA(); 
+      rfid.PCD_StopCrypto1(); 
     }
   }
   
