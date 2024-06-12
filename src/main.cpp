@@ -43,7 +43,6 @@ void setup() {
   digitalWrite(LED_False, LOW);
   digitalWrite(LED_True, LOW);
   Serial.println("Tap an RFID/NFC tag on the RFID-RC522 reader");
-  oledSetup();
 }
 
 void loop() {
