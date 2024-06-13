@@ -8,6 +8,7 @@
 int calculateDutyCycle(int angle);
 void servoUp();
 void servoDown();
+void timerBegin();
 
 #define LED_False 5
 #define LED_True 15
@@ -15,13 +16,22 @@ void servoDown();
 #define SS_PIN 21
 #define RST_PIN 16       
 
-#define SERVO_PIN 4 
+#define SERVO_PIN 4
 #define LEDC_CHANNEL 0
 #define RESOLUTION 16
 #define REQUENCY 50
 
+
+
 bool ServoOn;
 bool ServoOff;
+
+bool boxOpen = false;
+#define REEDSWITCH 3
+
+unsigned long currentmillis;
+unsigned long previousmillis;
+float timer = 30;
 
 MFRC522 rfid(SS_PIN, RST_PIN);  
 
@@ -38,6 +48,7 @@ void setup() {
   delay(200);
   pinMode(LED_False, OUTPUT);
   pinMode(LED_True, OUTPUT);
+  pinMode(REEDSWITCH, INPUT_PULLDOWN);
   SPI.begin(); 
   rfid.PCD_Init();
   digitalWrite(LED_False, LOW);
@@ -46,6 +57,8 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(digitalRead(REEDSWITCH));
+  currentmillis = millis();
   digitalWrite(LED_False, LOW);
   digitalWrite(LED_True, LOW);
  if (rfid.PICC_IsNewCardPresent()) { // new tag is available
@@ -107,4 +120,9 @@ void servoDown(){
   delay(1000);
   ServoOff = false;
   }
+}
+
+void timerBegin(){
+if(currentmillis - previousmillis > timer)
+  previousmillis = millis();
 }
